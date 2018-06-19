@@ -2,7 +2,7 @@
 
 namespace Nbj\Http;
 
-use Nbj\Foundation\ParameterSet;
+use Nbj\Foundation\Support\ParameterSet;
 
 class Request
 {

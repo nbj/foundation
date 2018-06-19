@@ -1,6 +1,6 @@
 <?php
 
-namespace Nbj\Foundation;
+namespace Nbj\Foundation\Support;
 
 use Countable;
 use ArrayAccess;

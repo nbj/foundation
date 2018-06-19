@@ -3,7 +3,7 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
-use Nbj\Foundation\ParameterSet;
+use Nbj\Foundation\Support\ParameterSet;
 
 class ParameterSetTest extends TestCase
 {

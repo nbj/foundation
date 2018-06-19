@@ -4,63 +4,18 @@ namespace Nbj\Foundation;
 
 use Closure;
 use InvalidArgumentException;
+use Nbj\Foundation\Traits\Singleton;
 
 class Application
 {
-    /**
-     * Holds the application instance
-     *
-     * @var Application $instance
-     */
-    protected static $instance;
+    use Singleton;
 
     /**
      * Holds all registered services in the application
      *
      * @var array $services
      */
-    protected $services;
-
-    /**
-     * Static construct
-     *
-     * @return static
-     */
-    public static function create()
-    {
-        if (self::$instance) {
-            return self::$instance;
-        }
-
-        self::$instance = new static;
-
-        return self::$instance;
-    }
-
-    /**
-     * Gets the instance of the application
-     *
-     * @return Application
-     */
-    public static function getInstance()
-    {
-        if (!self::$instance) {
-            return self::create();
-        }
-
-        return self::$instance;
-    }
-
-    /**
-     * Application constructor.
-     *
-     * This is private to prevent developers from
-     * creating new instances of this class
-     */
-    private function __construct()
-    {
-        $this->services = [];
-    }
+    protected $services = [];
 
     /**
      * Gets all services
