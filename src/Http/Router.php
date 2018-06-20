@@ -25,10 +25,12 @@ class Router
      *
      * @param string $uri
      * @param mixed $action
+     *
+     * @return Router
      */
     public function get($uri, $action)
     {
-        $this->registerRoute('GET', $uri, $action);
+        return $this->registerRoute('GET', $uri, $action);
     }
 
     /**
@@ -36,10 +38,12 @@ class Router
      *
      * @param string $uri
      * @param mixed $action
+     *
+     * @return Router
      */
     public function post($uri, $action)
     {
-        $this->registerRoute('POST', $uri, $action);
+        return $this->registerRoute('POST', $uri, $action);
     }
 
     /**
@@ -48,6 +52,8 @@ class Router
      * @param string $method
      * @param string $uri
      * @param mixed $action
+     *
+     * @return Router
      */
     public function registerRoute($method, $uri, $action)
     {
@@ -57,7 +63,7 @@ class Router
         if ($action instanceof Closure) {
             $this->routes[$method][$uri] = $action;
 
-            return;
+            return $this;
         }
 
         if (!is_string($action)) {
@@ -80,6 +86,8 @@ class Router
             'controller' => $controller,
             'action'     => $action,
         ];
+
+        return $this;
     }
 
     /**
