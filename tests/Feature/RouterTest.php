@@ -248,7 +248,7 @@ class RouterTest extends TestCase
 
         $response = $router->handle($request);
 
-        $this->assertEquals('response-from-some-uri', $response);
+        $this->assertNull($response);
     }
 
     /**
