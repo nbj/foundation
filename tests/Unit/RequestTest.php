@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests;
+namespace Tests\Unit;
 
 use Nbj\Http\Request;
 use PHPUnit\Framework\TestCase;

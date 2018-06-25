@@ -3,6 +3,7 @@
 namespace Nbj\Http;
 
 use Closure;
+use RuntimeException;
 use InvalidArgumentException;
 use Nbj\Foundation\Traits\Singleton;
 
@@ -19,6 +20,16 @@ class Router
         'GET'  => [],
         'POST' => [],
     ];
+
+    /**
+     * Gets all registered routes
+     *
+     * @return array
+     */
+    public function getRoutes()
+    {
+        return $this->routes;
+    }
 
     /**
      * Registers a GET route
@@ -66,6 +77,41 @@ class Router
             return $this;
         }
 
+        $this->guardAgainstInvalidFormattedAction($action);
+
+        // If everything checks out at this point
+        // Chop up the action string into the
+        // controller and action strings
+        list($controller, $action) = explode('@', $action);
+
+        $this->routes[$method][$uri] = [
+            'controller' => $controller,
+            'action'     => $action,
+        ];
+
+        return $this;
+    }
+
+    public function handle(Request $request)
+    {
+        $route = $this->resolveRoute($request);
+
+        if ($route instanceof Closure) {
+            return $route($request);
+        }
+
+        return null;
+    }
+
+    /**
+     * Guards against the action being invalidly formatted
+     *
+     * @param mixed $action
+     *
+     * @throws InvalidArgumentException
+     */
+    protected function guardAgainstInvalidFormattedAction($action)
+    {
         if (!is_string($action)) {
             throw new InvalidArgumentException(sprintf('$action must be either a string or a closure. %s given', gettype($action)));
         }
@@ -79,24 +125,37 @@ class Router
         if (count($controllerActionArray) != 2) {
             throw new InvalidArgumentException('$action must only contain a single @');
         }
-
-        list($controller, $action) = $controllerActionArray;
-
-        $this->routes[$method][$uri] = [
-            'controller' => $controller,
-            'action'     => $action,
-        ];
-
-        return $this;
     }
 
     /**
-     * Gets all registered routes
+     * Resolves the route
      *
-     * @return array
+     * @param Request $request
+     *
+     * @return mixed
+     *
+     * @throws RuntimeException
      */
-    public function getRoutes()
+    protected function resolveRoute(Request $request)
     {
-        return $this->routes;
+        $this->guardAgainstRouteNotBeingDefined($request);
+
+        return $this->routes[$request->getMethod()][$request->getUri()];
+    }
+
+    /**
+     * Guards against route not being defined
+     *
+     * @param Request $request
+     *
+     * @throws RuntimeException
+     */
+    protected function guardAgainstRouteNotBeingDefined(Request $request)
+    {
+        if (!isset($this->routes[$request->getMethod()][$request->getUri()])) {
+            $message = sprintf('No route for method: %s with uri: %s exists.', $request->getMethod(), $request->getUri());
+
+            throw new RuntimeException($message, 500);
+        }
     }
 }

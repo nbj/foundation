@@ -1,12 +1,13 @@
 <?php
 
-namespace Tests;
+namespace Tests\Feature;
 
 use Closure;
 use stdClass;
 use Exception;
 use Nbj\Http\Router;
 use Nbj\Http\Request;
+use RuntimeException;
 use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
@@ -216,6 +217,60 @@ class RouterTest extends TestCase
         }
 
         $this->assertNull($safetyCheck);
+    }
+
+    /** @test */
+    public function it_handles_requests_to_routes_define_with_closures()
+    {
+        $request = $this->createSimpleRequest('/some-uri');
+
+        $router = Router::create();
+
+        // Define a GET route with a closure
+        $router->get('/some-uri', function () {
+            return 'response-from-some-uri';
+        });
+
+        $response = $router->handle($request);
+
+        $this->assertEquals('response-from-some-uri', $response);
+    }
+
+    /** @test */
+    public function it_handles_requests_to_routes_define_with_controller_action_combo()
+    {
+        $request = $this->createSimpleRequest('/some-uri');
+
+        $router = Router::create();
+
+        // Define a GET route with a closure
+        $router->get('/some-uri', 'SomeController@someAction');
+
+        $response = $router->handle($request);
+
+        $this->assertEquals('response-from-some-uri', $response);
+    }
+
+    /**
+     * @test
+     * @runInSeparateProcess
+     */
+    public function it_takes_exception_to_route_not_being_defined()
+    {
+        $request = $this->createSimpleRequest('/some-uri');
+
+        $router = Router::create();
+
+        $response = null;
+
+        try {
+            $response = $router->handle($request);
+        } catch (Exception $exception) {
+            $this->assertInstanceOf(RuntimeException::class, $exception);
+            $this->assertEquals('No route for method: GET with uri: /some-uri exists.', $exception->getMessage());
+        }
+
+        $this->assertNull($response);
     }
 
     /**
