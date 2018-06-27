@@ -5,10 +5,15 @@
     "license": "MIT",
     "minimum-stability": "stable",
     "prefer-stable": true,
-    "require": {},
+    "require": {
+        "nbj/strings": "*",
+        "nbj/collections": "*",
+        "nbj/config": "*"
+    },
     "require-dev": {
         "phpunit/phpunit": "*",
-        "friendsofphp/php-cs-fixer": "*"
+        "friendsofphp/php-cs-fixer": "*",
+        "mikey179/vfsStream": "*"
     },
     "autoload": {
         "psr-4": {
