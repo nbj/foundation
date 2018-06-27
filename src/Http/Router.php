@@ -92,6 +92,13 @@ class Router
         return $this;
     }
 
+    /**
+     * Handles a request
+     *
+     * @param Request $request
+     *
+     * @return mixed
+     */
     public function handle(Request $request)
     {
         $route = $this->resolveRoute($request);
@@ -100,7 +107,32 @@ class Router
             return $route($request);
         }
 
-        return null;
+        return $this->handleControllerActionBasedRoute($route, $request);
+    }
+
+    /**
+     * @param $route
+     * @param Request $request
+     *
+     * @return mixed
+     */
+    protected function handleControllerActionBasedRoute($route, Request $request)
+    {
+        list($controllerName, $actionName) = array_values($route);
+
+        $controllerClass = sprintf('%s\\%s', CONTROLLER_NAMESPACE, $controllerName);
+
+        if (!class_exists($controllerClass)) {
+            throw new RuntimeException(sprintf('Controller class %s does not exist', $controllerClass));
+        }
+
+        $controller = new $controllerClass;
+
+        if (!method_exists($controller, $actionName)) {
+            throw new RuntimeException(sprintf('Controller %s does not have action: %s()', $controllerClass, $actionName));
+        }
+
+        return $controller->$actionName($request);
     }
 
     /**

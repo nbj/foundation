@@ -22,4 +22,7 @@
             <directory suffix=".php">./src</directory>
         </whitelist>
     </filter>
+    <php>
+        <const name="CONTROLLER_NAMESPACE" value="Nbj\Http\Controller" />
+    </php>
 </phpunit>

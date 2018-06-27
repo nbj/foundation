@@ -239,14 +239,37 @@ class RouterTest extends TestCase
     /** @test */
     public function it_handles_requests_to_routes_define_with_controller_action_combo()
     {
-        $request = $this->createSimpleRequest('/some-uri');
+        $this->getMockBuilder(CONTROLLER_NAMESPACE . '\SomeController')
+            ->setMethods(['someAction'])
+            ->getMock()
+            ->method('someAction')
+            ->willReturn('some-response');
 
+        $request = $this->createSimpleRequest('/some-uri');
         $router = Router::create();
 
         // Define a GET route with a closure
         $router->get('/some-uri', 'SomeController@someAction');
 
         $response = $router->handle($request);
+
+        $this->assertNull($response);
+    }
+
+    /** @test */
+    public function it_takes_exception_to_controller_class_not_existing()
+    {
+        $request = $this->createSimpleRequest('/some-uri');
+        $router = Router::create();
+        $router->get('/some-uri', 'SomeController@someAction');
+        $response = null;
+
+        try {
+            $response = $router->handle($request);
+        } catch (Exception $exception) {
+            $this->assertInstanceOf(RuntimeException::class, $exception);
+            $this->assertEquals('Controller class Nbj\Http\Controller\SomeController does not exist', $exception->getMessage());
+        }
 
         $this->assertNull($response);
     }
