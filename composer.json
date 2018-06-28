@@ -1,7 +1,7 @@
 {
-    "name": "nbj/request",
-    "description": "Request class for easy capturing of requests",
-    "type": "library",
+    "name": "nbj/foundation",
+    "description": "A light MVC framework for learning how a framework could be built",
+    "type": "project",
     "license": "MIT",
     "minimum-stability": "stable",
     "prefer-stable": true,
