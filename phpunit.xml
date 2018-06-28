@@ -23,6 +23,6 @@
         </whitelist>
     </filter>
     <php>
-        <const name="CONTROLLER_NAMESPACE" value="Nbj\Http\Controller" />
+        <const name="CONTROLLER_NAMESPACE" value="Tests\Mocks" />
     </php>
 </phpunit>

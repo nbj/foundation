@@ -239,21 +239,15 @@ class RouterTest extends TestCase
     /** @test */
     public function it_handles_requests_to_routes_define_with_controller_action_combo()
     {
-        $this->getMockBuilder(CONTROLLER_NAMESPACE . '\SomeController')
-            ->setMethods(['someAction'])
-            ->getMock()
-            ->method('someAction')
-            ->willReturn('some-response');
-
         $request = $this->createSimpleRequest('/some-uri');
         $router = Router::create();
 
         // Define a GET route with a closure
-        $router->get('/some-uri', 'SomeController@someAction');
+        $router->get('/some-uri', 'MockController@mockAction');
 
         $response = $router->handle($request);
 
-        $this->assertNull($response);
+        $this->assertEquals('mockResponse', $response);
     }
 
     /** @test */
@@ -268,7 +262,25 @@ class RouterTest extends TestCase
             $response = $router->handle($request);
         } catch (Exception $exception) {
             $this->assertInstanceOf(RuntimeException::class, $exception);
-            $this->assertEquals('Controller class Nbj\Http\Controller\SomeController does not exist', $exception->getMessage());
+            $this->assertEquals('Controller class Tests\Mocks\SomeController does not exist', $exception->getMessage());
+        }
+
+        $this->assertNull($response);
+    }
+
+    /** @test */
+    public function it_takes_exception_to_controller_action_not_existing()
+    {
+        $request = $this->createSimpleRequest('/some-uri');
+        $router = Router::create();
+        $router->get('/some-uri', 'MockController@someActionThatDoesNotExist');
+        $response = null;
+
+        try {
+            $response = $router->handle($request);
+        } catch (Exception $exception) {
+            $this->assertInstanceOf(RuntimeException::class, $exception);
+            $this->assertEquals('Controller Tests\Mocks\MockController does not have action: someActionThatDoesNotExist()', $exception->getMessage());
         }
 
         $this->assertNull($response);
