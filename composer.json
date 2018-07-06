@@ -12,7 +12,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "*",
-        "friendsofphp/php-cs-fixer": "*"
+        "friendsofphp/php-cs-fixer": "*",
+        "mikey179/vfsStream": "*"
     },
     "autoload": {
         "psr-4": {

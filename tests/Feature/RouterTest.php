@@ -9,10 +9,23 @@ use Nbj\Http\Router;
 use Nbj\Http\Request;
 use RuntimeException;
 use InvalidArgumentException;
+use org\bovigo\vfs\vfsStream;
 use PHPUnit\Framework\TestCase;
+use org\bovigo\vfs\vfsStreamWrapper;
+use org\bovigo\vfs\vfsStreamDirectory;
 
 class RouterTest extends TestCase
 {
+    public function setUp()
+    {
+        vfsStreamWrapper::register();
+        vfsStreamWrapper::setRoot(new vfsStreamDirectory('routesPath'));
+
+        vfsStream::create([
+            'routes.php' => '<?php $router->get(\'/some-uri\', \'SomeController@someAction\');'
+        ]);
+    }
+
     /** @test */
     public function it_can_be_created_statically()
     {
@@ -306,6 +319,43 @@ class RouterTest extends TestCase
         }
 
         $this->assertNull($response);
+    }
+
+    /** @test */
+    public function it_can_load_routes_from_php_files_in_a_specific_path()
+    {
+        $router = Router::create();
+
+        $router->loadRoutesFrom(vfsStream::url('routesPath'));
+
+        $routes = $router->getRoutes();
+
+        $this->assertArrayHasKey('GET', $routes);
+        $this->assertCount(1, $routes['GET']);
+        $this->assertArrayHasKey('/some-uri', $routes['GET']);
+        $this->assertArrayHasKey('controller', $routes['GET']['/some-uri']);
+        $this->assertArrayHasKey('action', $routes['GET']['/some-uri']);
+        $this->assertEquals('SomeController', $routes['GET']['/some-uri']['controller']);
+        $this->assertEquals('someAction', $routes['GET']['/some-uri']['action']);
+    }
+
+    /** @test */
+    public function it_takes_exception_to_routes_path_not_existing()
+    {
+        $router = Router::create();
+
+        $safetyCheck = true;
+
+        try {
+            $router->loadRoutesFrom('/this/path/does/not/exist');
+
+            $safetyCheck = false;
+        } catch (Exception $exception) {
+            $this->assertInstanceOf(InvalidArgumentException::class, $exception);
+            $this->assertEquals('Path to routes files does not exist: /this/path/does/not/exist', $exception->getMessage());
+        }
+
+        $this->assertTrue($safetyCheck);
     }
 
     /**

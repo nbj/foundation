@@ -93,6 +93,36 @@ class Router
     }
 
     /**
+     * Loads routes from php files in a specific path
+     *
+     * @param string $path
+     */
+    public function loadRoutesFrom($path)
+    {
+        if (!file_exists($path)) {
+            $message = sprintf('Path to routes files does not exist: %s', $path);
+
+            throw new InvalidArgumentException($message);
+        }
+
+        // Scan path for all files
+        $files = scandir($path);
+
+        // Filter files down to only php files
+        $files = array_filter($files, function ($file) {
+            return strpos($file, '.php') !== false;
+        });
+
+        // Resolve each routes file into the router
+        foreach ($files as $file) {
+            /** @noinspection PhpUnusedLocalVariableInspection */
+            $router = $this;
+
+            require $path . DIRECTORY_SEPARATOR . $file;
+        }
+    }
+
+    /**
      * Handles a request
      *
      * @param Request $request

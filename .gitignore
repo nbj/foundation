@@ -1,4 +1,7 @@
 /.idea
+/public
+/config
+/bootstrap
 /vendor
 .php_cs.cache
 .DS_Store
