@@ -1,7 +1,7 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
     "content-hash": "5dea96c1ab6f66af9176ba5488890c10",
@@ -49,16 +49,16 @@
         },
         {
             "name": "nbj/config",
-            "version": "0.0.2",
+            "version": "0.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nbj/config.git",
-                "reference": "cded4588476042c6a013718568aa7fadf04cae8e"
+                "reference": "75d121acd55ed24777d11de2007c16bf24c06dd0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nbj/config/zipball/cded4588476042c6a013718568aa7fadf04cae8e",
-                "reference": "cded4588476042c6a013718568aa7fadf04cae8e",
+                "url": "https://api.github.com/repos/nbj/config/zipball/75d121acd55ed24777d11de2007c16bf24c06dd0",
+                "reference": "75d121acd55ed24777d11de2007c16bf24c06dd0",
                 "shasum": ""
             },
             "require-dev": {
@@ -87,7 +87,7 @@
                 "config",
                 "reader"
             ],
-            "time": "2018-07-04T21:03:03+00:00"
+            "time": "2018-07-06T08:49:05+00:00"
         },
         {
             "name": "nbj/strings",
