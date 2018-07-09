@@ -18,7 +18,10 @@
     "autoload": {
         "psr-4": {
             "Nbj\\": "src/"
-        }
+        },
+        "files": [
+            "helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
