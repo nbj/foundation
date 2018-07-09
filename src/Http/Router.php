@@ -96,6 +96,8 @@ class Router
      * Loads routes from php files in a specific path
      *
      * @param string $path
+     *
+     * @return Router
      */
     public function loadRoutesFrom($path)
     {
@@ -120,6 +122,8 @@ class Router
 
             require $path . DIRECTORY_SEPARATOR . $file;
         }
+
+        return $this;
     }
 
     /**
